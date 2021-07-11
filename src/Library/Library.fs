@@ -23,7 +23,7 @@ module Say =
 
     let new_pub():secp256k1_pubkey =
         let lst = 
-             List.map ( (fun x -> x * 0) >> byte) [0..63]
+             List.map byte [0..63]
             |> List.toArray
         {data=lst}
     
@@ -48,12 +48,7 @@ module Say =
         pre_g_128: secp256k1_ge_storage[]
     }
 
-    [<StructLayout(LayoutKind.Sequential)>]
-    [<Struct>]
-    type secp256k1_context_struct =  { 
-        [<MarshalAs(UnmanagedType.ByValArray,SizeConst = 4)>]
-        n:int[]
-    }
+
 
     [<StructLayout(LayoutKind.Sequential)>]
     [<Struct>]
@@ -77,6 +72,24 @@ module Say =
         prec: secp256k1_ge_storage[][]
         blind: secp256k1_scalar
         initial: secp256k1_gej
+    }
+
+    [<StructLayout(LayoutKind.Sequential)>]
+    [<Struct>]
+    type secp256k1_callback = {
+        fn: System.IntPtr
+        data: System.IntPtr
+    }
+
+
+    [<StructLayout(LayoutKind.Sequential)>]
+    [<Struct>]
+    type secp256k1_context_struct =  { 
+        ecmult_ctx: secp256k1_ecmult_context
+        ecmult_gen_ctx: secp256k1_ecmult_gen_context
+        illegal_callback: secp256k1_callback
+        error_callback: secp256k1_callback
+        declassify: int 
     }
 
     let hello name =
